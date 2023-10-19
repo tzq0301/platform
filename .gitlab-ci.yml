@@ -1,4 +1,5 @@
 stages:
+  - begin
   - maven deploy
 
 cache:
@@ -10,11 +11,20 @@ variables:
   MAVEN_OPTS: "-Dmaven.repo.local=$CI_PROJECT_DIR/.m2/repository"
   GIT_DEPTH: 1
 
+start:
+  stage: start
+  script:
+    - echo 'hello'
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+      when: manual
+
 maven-deploy-pom:
   stage: maven deploy
   image: maven:3.6.3-openjdk-17
+  needs:
+    - start
   script:
     - 'cd platform-pom && mvn deploy -s ci_settings.xml && cd -'
   rules:
     - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
-      when: manual
