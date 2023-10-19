@@ -1,0 +1,20 @@
+stages:
+  - maven deploy
+
+cache:
+  paths:
+    - .m2/repository
+  when: always
+
+variables:
+  MAVEN_OPTS: "-Dmaven.repo.local=$CI_PROJECT_DIR/.m2/repository"
+  GIT_DEPTH: 1
+
+maven-deploy-pom:
+  stage: maven deploy
+  image: maven:3.6.3-openjdk-17
+  script:
+    - 'cd platform-pom && mvn deploy -s ci_settings.xml && cd -'
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+      when: manual
