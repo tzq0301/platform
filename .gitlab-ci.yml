@@ -1,9 +1,6 @@
-image: docker:19.03.13
-
 stages:
   - begin
   - maven deploy
-  - docker deploy
 
 cache:
   paths:
@@ -13,10 +10,6 @@ cache:
 variables:
   MAVEN_OPTS: "-Dmaven.repo.local=$CI_PROJECT_DIR/.m2/repository"
   GIT_DEPTH: 1
-  DOCKER_TLS_CERTDIR: "/certs"
-
-services:
-  - docker:19.03.13-dind
 
 begin:
   stage: begin
@@ -43,14 +36,3 @@ maven-deploy-client:
     - 'cd platform-client-spring-boot-starter && mvn deploy -s ci_settings.xml && cd -'
   rules:
     - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
-
-docker-deploy-server:
-  stage: docker deploy
-  before_script:
-    - echo "$DOCKER_REGISTRY_PASS" | docker login $DOCKER_REGISTRY --username $DOCKER_REGISTRY_USER --password-stdin
-    - cd platform-server
-  script:
-    - docker build -t TZQ/platform-server .
-    - docker push TZQ/platform-server
-  after_script:
-    - cd -
