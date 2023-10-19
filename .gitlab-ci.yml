@@ -28,3 +28,13 @@ maven-deploy-pom:
     - 'cd platform-pom && mvn deploy -s ci_settings.xml && cd -'
   rules:
     - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+
+maven-deploy-server:
+  stage: maven deploy
+  image: maven:3.6.3-openjdk-17
+  needs:
+    - maven-deploy-pom
+  script:
+    - 'cd platform-server && mvn deploy -s ci_settings.xml && cd -'
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
