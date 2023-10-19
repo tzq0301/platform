@@ -10,7 +10,7 @@
         <version>0.0.3</version>
     </parent>
 
-    <artifactId>platform-server</artifactId>
+    <artifactId>platform-client-spring-boot-starter</artifactId>
     <version>${project.parent.version}</version>
 
     <packaging>jar</packaging>
