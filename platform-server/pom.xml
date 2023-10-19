@@ -8,6 +8,7 @@
         <groupId>nju.ics</groupId>
         <artifactId>platform-pom</artifactId>
         <version>0.0.3</version>
+        <relativePath>../platform-pom</relativePath>
     </parent>
 
     <artifactId>platform-server</artifactId>
