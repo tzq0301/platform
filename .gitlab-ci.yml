@@ -29,8 +29,6 @@ begin:
 maven-deploy-pom:
   stage: maven deploy
   image: maven:3.6.3-openjdk-17
-  needs:
-    - begin
   script:
     - 'cd platform-pom && mvn deploy -s ci_settings.xml && cd -'
   rules:
