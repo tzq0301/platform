@@ -16,4 +16,11 @@
 
     <packaging>jar</packaging>
 
+    <repositories>
+        <repository>
+            <id>gitlab-maven</id>
+            <url>https://git.nju.edu.cn/api/v4/projects/10385/packages/maven</url>
+        </repository>
+    </repositories>
+
 </project>
