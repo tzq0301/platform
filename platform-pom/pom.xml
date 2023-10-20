@@ -6,7 +6,7 @@
 
     <groupId>nju.ics</groupId>
     <artifactId>platform-pom</artifactId>
-    <version>0.0.6</version>
+    <version>0.0.7</version>
 
     <packaging>pom</packaging>
 
@@ -17,7 +17,7 @@
     </modules>
 
     <properties>
-        <spring-boot-dependencies.version>3.0.0</spring-boot-dependencies.version>
+        <spring-boot-dependencies.version>3.1.0</spring-boot-dependencies.version>
         <java.version>17</java.version>
         <maven.compiler.target>${java.version}</maven.compiler.target>
         <maven.compiler.source>${java.version}</maven.compiler.source>
@@ -33,6 +33,12 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
+
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-lang3</artifactId>
+                <version>3.13.0</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -46,6 +52,9 @@
                     <configuration>
                         <source>${java.version}</source>
                         <target>${java.version}</target>
+                        <compilerArgs>
+                            <arg>-parameters</arg>
+                        </compilerArgs>
                     </configuration>
                 </plugin>
                 <plugin>

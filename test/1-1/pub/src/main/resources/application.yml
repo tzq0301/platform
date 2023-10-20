@@ -1,0 +1,7 @@
+server:
+  port: 8100
+
+platform:
+  server-url: "http://localhost:8080"
+  client-type: "pub"
+  client-name: "pub"
