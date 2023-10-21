@@ -47,7 +47,7 @@ public class TcpProxyServer implements ProxyServer {
                     }).start();
                 }
             } catch (IOException e) {
-                throw new RuntimeException(e);
+                throw new RuntimeException(String.format("port = %d", port), e);
             }
         }).start();
     }

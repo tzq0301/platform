@@ -1,0 +1,5 @@
+platform:
+  server-url: "http://host.docker.internal:8080"
+  client-type: "pub"
+  client-name: "pub"
+  client-port: 8200

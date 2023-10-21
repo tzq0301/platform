@@ -1,7 +1,0 @@
-server:
-  port: 8102
-
-platform:
-  server-url: "http://localhost:8080"
-  client-type: "sub"
-  client-name: "sub"

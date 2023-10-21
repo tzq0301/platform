@@ -1,0 +1,5 @@
+platform:
+  server-url: "http://host.docker.internal:8080"
+  client-type: "sub"
+  client-name: "sub"
+  client-port: 8201

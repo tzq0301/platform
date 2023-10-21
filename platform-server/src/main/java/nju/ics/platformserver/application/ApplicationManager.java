@@ -87,8 +87,7 @@ public class ApplicationManager {
                     if (Boolean.TRUE.equals(Boolean.parseBoolean(response.body()))) {
                         timer.cancel();
                     }
-                } catch (IOException | InterruptedException | URISyntaxException e) {
-                    throw new RuntimeException(e);
+                } catch (IOException | InterruptedException | URISyntaxException ignored) {
                 }
             }
         }, 0L, TEST_CREATE_APPLICATION_SUCCESS_RETRY_INTERVAL.toMillis());

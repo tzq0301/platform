@@ -10,7 +10,7 @@
         <version>0.1.0-BETA-1</version>
     </parent>
 
-    <artifactId>pub</artifactId>
+    <artifactId>sub-am</artifactId>
     <version>${project.parent.version}</version>
 
     <properties>
@@ -31,6 +31,22 @@
             <version>${project.version}</version>
         </dependency>
     </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
 
     <repositories>
         <repository>

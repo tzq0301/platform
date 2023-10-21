@@ -55,10 +55,10 @@ public class DockerManager {
         List<ExposedPort> exposedPorts = containerPortBindings.stream()
                 .map(binding -> {
                     var exposedPort = switch (binding.protocol()) {
-                        case TCP -> ExposedPort.tcp(binding.publicPort());
-                        case UDP -> ExposedPort.udp(binding.publicPort());
+                        case TCP -> ExposedPort.tcp(binding.privatePort());
+                        case UDP -> ExposedPort.udp(binding.privatePort());
                     };
-                    portBindings.bind(exposedPort, Ports.Binding.bindPort(binding.privatePort()));
+                    portBindings.bind(exposedPort, Ports.Binding.bindPort(binding.publicPort()));
                     return exposedPort;
                 })
                 .toList();
