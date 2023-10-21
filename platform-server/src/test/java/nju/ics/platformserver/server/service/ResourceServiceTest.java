@@ -2,15 +2,13 @@ package nju.ics.platformserver.server.service;
 
 import jakarta.annotation.Resource;
 import nju.ics.platformmodel.resource.GraphResponse;
-import nju.ics.platformserver.pubsub.Client;
-import nju.ics.platformserver.pubsub.PubSub;
 import nju.ics.platformserver.pubsub.Topic;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.Set;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest
 class ResourceServiceTest {

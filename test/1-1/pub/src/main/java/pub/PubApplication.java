@@ -1,8 +1,6 @@
 package pub;
 
 import jakarta.annotation.Resource;
-import nju.ics.platformclientspringbootstarter.handler.Handler;
-import nju.ics.platformclientspringbootstarter.handler.Listener;
 import nju.ics.platformclientspringbootstarter.model.Topic;
 import nju.ics.platformclientspringbootstarter.publish.Publisher;
 import org.springframework.boot.SpringApplication;

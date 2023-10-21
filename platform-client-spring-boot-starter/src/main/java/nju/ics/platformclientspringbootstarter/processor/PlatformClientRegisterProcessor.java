@@ -40,6 +40,7 @@ public class PlatformClientRegisterProcessor {
         this.platformClient = platformClient;
     }
 
+    @Async
     @EventListener(ApplicationReadyEvent.class)
     public void onApplicationReadyEvent() {
         Set<Topic> pubTopics = new HashSet<>(applicationContext.getBeansOfType(Topic.class).values());

@@ -7,7 +7,7 @@
     <parent>
         <groupId>nju.ics</groupId>
         <artifactId>platform-pom</artifactId>
-        <version>0.0.7</version>
+        <version>0.1.0-BETA</version>
         <relativePath>../platform-pom</relativePath>
     </parent>
 

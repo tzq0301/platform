@@ -7,7 +7,7 @@
     <parent>
         <groupId>nju.ics</groupId>
         <artifactId>platform-pom</artifactId>
-        <version>0.0.7</version>
+        <version>0.1.0-BETA</version>
         <relativePath>../platform-pom</relativePath>
     </parent>
 
@@ -37,6 +37,21 @@
             <groupId>nju.ics</groupId>
             <artifactId>platform-model</artifactId>
             <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.github.docker-java</groupId>
+            <artifactId>docker-java</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.github.docker-java</groupId>
+            <artifactId>docker-java-transport-httpclient5</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.httpcomponents.core5</groupId>
+            <artifactId>httpcore5-h2</artifactId>
         </dependency>
     </dependencies>
 

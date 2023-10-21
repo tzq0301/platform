@@ -5,7 +5,6 @@ import jakarta.annotation.Nonnull;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-import java.util.stream.Stream;
 
 public class AllTopicSolverPlugin implements PubSubPlugin {
     private static final Topic ALL_TOPIC = new Topic("*");

@@ -7,7 +7,6 @@ import nju.ics.platformclientspringbootstarter.handler.HandlerRegistry;
 import nju.ics.platformclientspringbootstarter.model.Message;
 import nju.ics.platformclientspringbootstarter.model.Topic;
 import nju.ics.platformclientspringbootstarter.publish.Publisher;
-import nju.ics.platformmodel.pubsub.MessageDTO;
 import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.support.CronTrigger;
 import org.springframework.stereotype.Component;
