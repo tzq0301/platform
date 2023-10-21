@@ -11,4 +11,6 @@ public class PlatformClientProperties {
     private String clientType;
 
     private String clientName;
+
+    private Integer clientPort;
 }

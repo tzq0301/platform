@@ -7,7 +7,7 @@
     <parent>
         <groupId>nju.ics</groupId>
         <artifactId>platform-pom</artifactId>
-        <version>0.1.0-BETA</version>
+        <version>0.1.0-BETA-1</version>
         <relativePath>../platform-pom</relativePath>
     </parent>
 
@@ -35,8 +35,8 @@
         </dependency>
 
         <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-web</artifactId>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
 
         <dependency>
