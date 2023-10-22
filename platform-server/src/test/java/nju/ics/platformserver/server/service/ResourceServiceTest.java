@@ -18,34 +18,36 @@ class ResourceServiceTest {
 
     @Test
     void graph() {
-        Topic t1 = new Topic("t1");
-        Topic t2 = new Topic("t2");
-        Topic t3 = new Topic("t3");
-
-        resourceService.register("pub", "pub", Set.of(t1, t2), Set.of());
-        resourceService.register("sub", "sub", Set.of(), Set.of(t2, t3));
-
         {
-            GraphResponse graph = resourceService.graph();
-            assertEquals(5, graph.nodes().size());
-            assertEquals(4, graph.edges().size());
-        }
+            Topic t1 = new Topic("t1");
+            Topic t2 = new Topic("t2");
+            Topic t3 = new Topic("t3");
 
-        resourceService.register("subAll", "sub", Set.of(), Set.of(new Topic("*")));
+            resourceService.register("pub", "pub", Set.of(t1, t2), Set.of());
+            resourceService.register("sub", "sub", Set.of(), Set.of(t2, t3));
 
-        {
-            GraphResponse graph = resourceService.graph();
-            assertEquals(6, graph.nodes().size());
-            assertEquals(7, graph.edges().size());
-        }
+            {
+                GraphResponse graph = resourceService.graph();
+                assertEquals(5, graph.nodes().size());
+                assertEquals(4, graph.edges().size());
+            }
 
-        Topic t4 = new Topic("t4");
-        resourceService.register("pub2", "pub", Set.of(t4), Set.of());
+            resourceService.register("subAll", "sub", Set.of(), Set.of(new Topic("*")));
 
-        {
-            GraphResponse graph = resourceService.graph();
-            assertEquals(8, graph.nodes().size());
-            assertEquals(9, graph.edges().size());
+            {
+                GraphResponse graph = resourceService.graph();
+                assertEquals(6, graph.nodes().size());
+                assertEquals(7, graph.edges().size());
+            }
+
+            Topic t4 = new Topic("t4");
+            resourceService.register("pub2", "pub", Set.of(t4), Set.of());
+
+            {
+                GraphResponse graph = resourceService.graph();
+                assertEquals(8, graph.nodes().size());
+                assertEquals(9, graph.edges().size());
+            }
         }
     }
 }

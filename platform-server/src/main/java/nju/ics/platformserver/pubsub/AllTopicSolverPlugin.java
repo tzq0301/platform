@@ -2,8 +2,8 @@ package nju.ics.platformserver.pubsub;
 
 import jakarta.annotation.Nonnull;
 
+import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 
 public class AllTopicSolverPlugin implements PubSubPlugin {
@@ -11,20 +11,18 @@ public class AllTopicSolverPlugin implements PubSubPlugin {
 
     @Override
     public void beforeOnMessage(@Nonnull PubSub pubsub, @Nonnull Message<?> message) {
-        Set<Client> subscribersToAllTopics = pubsub.topicSubscribers.getOrDefault(ALL_TOPIC, Set.of());
+        Set<Client> subscribersToAllTopics = pubsub.store.subscribersOfTopic(ALL_TOPIC);
         pubsub.onMessage(subscribersToAllTopics, message);
     }
 
     @Override
-    public void afterGetTopicSubscribers(@Nonnull Map<Topic, Set<Client>> topicPublishers,
-                                         @Nonnull Map<Topic, Set<Client>> topicSubscribers) {
-        Set<Client> allTopicSubscribers = topicSubscribers.getOrDefault(ALL_TOPIC, Set.of());
-        topicSubscribers.remove(ALL_TOPIC);
+    public void afterGetPubSubStore(@Nonnull PubSubStore store) {
+        Set<Client> allTopicSubscribers = store.subscribersOfTopic(ALL_TOPIC);
 
-        allTopicSubscribers
-                .forEach(client -> new HashSet<Topic>() {{
-                    addAll(topicPublishers.keySet());
-                    addAll(topicSubscribers.keySet());
-                }}.forEach(topic -> topicSubscribers.computeIfAbsent(topic, t -> new HashSet<>()).add(client)));
+        store.removeSubscriptionsOfTopic(ALL_TOPIC);
+
+        var relations = new HashSet<RelationPair>();
+        store.topics().forEach(topic -> relations.add(new RelationPair(Relation.SUBSCRIBE, topic)));
+        allTopicSubscribers.forEach(client -> store.add(client, relations));
     }
 }

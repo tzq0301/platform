@@ -7,7 +7,6 @@ import nju.ics.platformserver.pubsub.*;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
-import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -45,36 +44,20 @@ public class ResourceService {
     }
 
     public GraphResponse graph() {
-        Map<Topic, Set<Client>> topicPublishers = pubsub.getTopicPublishers();
-        Map<Topic, Set<Client>> topicSubscribers = pubsub.getTopicSubscribers();
-
-        Stream<Topic> allTopics = Stream.concat(
-                topicPublishers.keySet().stream(),
-                topicSubscribers.keySet().stream()
-        ).distinct();
-
-        Stream<Client> allClients = Stream.concat(
-                topicPublishers.values().stream().flatMap(Set::stream),
-                topicSubscribers.values().stream().flatMap(Set::stream)
-        ).distinct();
+        PubSubStore store = pubsub.getPubSubStore();
 
         Set<GraphResponse.Node> nodes = Stream.concat(
-                allTopics.map(topic -> new GraphResponse.Node("topic", topic.value(), topic.value())),
-                allClients.map(client -> new GraphResponse.Node(client.getType(), client.getId(), client.getName()))
+                store.clients().stream().map(client -> new GraphResponse.Node(client.getType(), client.getId(), client.getName())),
+                store.topics().stream().map(topic -> new GraphResponse.Node("topic", topic.value(), topic.value()))
         ).collect(Collectors.toSet());
 
-        Set<GraphResponse.Edge> edges = Stream.concat(
-                topicPublishers.entrySet().stream().flatMap(entry -> {
-                    Topic topic = entry.getKey();
-                    Set<Client> publishers = entry.getValue();
-                    return publishers.stream().map(publisher -> new GraphResponse.Edge(publisher.getId(), topic.value()));
-                }),
-                topicSubscribers.entrySet().stream().flatMap(entry -> {
-                    Topic topic = entry.getKey();
-                    Set<Client> subscribers = entry.getValue();
-                    return subscribers.stream().map(subscriber -> new GraphResponse.Edge(topic.value(), subscriber.getId()));
+        Set<GraphResponse.Edge> edges = store.relations()
+                .stream()
+                .map(pair -> switch (pair.getRight()) {
+                    case PUBLISH -> new GraphResponse.Edge(pair.getLeft().getLeft().getId(), pair.getLeft().getRight().value());
+                    case SUBSCRIBE -> new GraphResponse.Edge(pair.getLeft().getRight().value(), pair.getLeft().getLeft().getId());
                 })
-        ).collect(Collectors.toSet());
+                .collect(Collectors.toSet());
 
         return new GraphResponse(nodes, edges);
     }
