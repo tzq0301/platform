@@ -46,3 +46,13 @@ maven-deploy-client:
     - 'cd platform-client-spring-boot-starter && mvn deploy -s ci_settings.xml && cd -'
   rules:
     - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+
+maven-deploy-server:
+  stage: maven deploy
+  image: maven:3.6.3-openjdk-17
+  needs:
+    - maven-deploy-model
+  script:
+    - 'cd platform-server && mvn deploy -s ci_settings.xml && cd -'
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
