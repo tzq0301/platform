@@ -2,6 +2,7 @@ package nju.ics.platformserver.docker;
 
 import com.github.dockerjava.api.DockerClient;
 import com.github.dockerjava.api.command.PullImageResultCallback;
+import com.github.dockerjava.api.exception.NotFoundException;
 import com.github.dockerjava.api.model.ExposedPort;
 import com.github.dockerjava.api.model.HostConfig;
 import com.github.dockerjava.api.model.Ports;
@@ -35,7 +36,7 @@ public class DockerManager {
         this.dockerClient = dockerClient;
     }
 
-    public void pullImage(@Nonnull String imageName, @Nonnull String imageTag) {
+    public void pullImage(@Nonnull String imageName, @Nonnull String imageTag) throws NotFoundException {
         try {
             dockerClient
                     .pullImageCmd(imageName)

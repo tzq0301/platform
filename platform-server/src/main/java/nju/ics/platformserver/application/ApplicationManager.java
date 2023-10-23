@@ -1,6 +1,8 @@
 package nju.ics.platformserver.application;
 
+import com.github.dockerjava.api.exception.NotFoundException;
 import jakarta.annotation.Nonnull;
+import lombok.extern.slf4j.Slf4j;
 import nju.ics.platformserver.application.model.CreateApplicationCmd;
 import nju.ics.platformserver.application.model.DestroyApplicationCmd;
 import nju.ics.platformserver.application.model.UpdateApplicationCmd;
@@ -21,6 +23,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+@Slf4j
 public class ApplicationManager {
     private static final Duration TEST_CREATE_APPLICATION_SUCCESS_RETRY_INTERVAL = Duration.ofSeconds(1L);
 
@@ -56,7 +59,11 @@ public class ApplicationManager {
         final String imageName = cmd.name();
         final String imageTag = cmd.version();
 
-        dockerManager.pullImage(imageName, imageTag);
+        try {
+            dockerManager.pullImage(imageName, imageTag);
+        } catch (NotFoundException e) {
+            log.info("can not found {}:{} on docker hub, try using local image", imageName, imageTag);
+        }
 
         final String containerName = Applications.generateContainerName();
         final Map<String, String> containerLabels = Applications.generateDefaultLabels(cmd.healthCheckPort());
