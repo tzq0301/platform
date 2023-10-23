@@ -52,6 +52,11 @@
             <id>gitlab-maven</id>
             <url>https://git.nju.edu.cn/api/v4/projects/10385/packages/maven</url>
         </repository>
+
+        <repository>
+            <id>aliyun</id>
+            <url>https://maven.aliyun.com/repository/public</url>
+        </repository>
     </repositories>
    ```
 4. 修改启动类（包含 `main` 函数的类）：
