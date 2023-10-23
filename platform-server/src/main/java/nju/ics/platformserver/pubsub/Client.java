@@ -43,20 +43,20 @@ public class Client implements Publisher, Subscriber {
     }
 
     @Override
-    public <T> void publish(@Nonnull Topic topic, @Nullable T data) {
+    public synchronized  <T> void publish(@Nonnull Topic topic, @Nullable T data) {
         this.publish(new Message<>(id, topic, data));
     }
 
-    public <T> void publish(@Nonnull Message<T> message) {
+    public synchronized  <T> void publish(@Nonnull Message<T> message) {
         pubsub.publish(message);
     }
 
     @Override
-    public <T> void onMessage(@Nonnull Message<T> message) {
+    public synchronized  <T> void onMessage(@Nonnull Message<T> message) {
         messages.add(message);
     }
 
-    public List<Message<?>> listUnreadMessages() {
+    public synchronized List<Message<?>> listUnreadMessages() {
         int size = this.messages.size();
         List<Message<?>> unreadMessages = this.messages.subList(this.offset, size);
         this.offset = size;

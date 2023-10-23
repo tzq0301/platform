@@ -1,5 +1,6 @@
 nju.ics.platformclientspringbootstarter.autoconfiguration.PlatformClientAutoConfiguration
 nju.ics.platformclientspringbootstarter.client.PlatformClient
+nju.ics.platformclientspringbootstarter.controller.StatusController
 nju.ics.platformclientspringbootstarter.handler.HandlerRegistry
 nju.ics.platformclientspringbootstarter.processor.PlatformClientRegisterProcessor
 nju.ics.platformclientspringbootstarter.processor.PlatformClientUnregisterProcessor
