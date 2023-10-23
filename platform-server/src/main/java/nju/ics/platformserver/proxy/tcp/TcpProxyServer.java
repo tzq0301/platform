@@ -1,6 +1,7 @@
 package nju.ics.platformserver.proxy.tcp;
 
 import jakarta.annotation.Nonnull;
+import lombok.extern.slf4j.Slf4j;
 import nju.ics.platformserver.proxy.ProxyServer;
 import nju.ics.platformserver.proxy.TargetServer;
 import nju.ics.platformserver.proxy.strategy.ProxyStrategy;
@@ -12,6 +13,7 @@ import java.net.SocketException;
 import java.util.HashSet;
 import java.util.Set;
 
+@Slf4j
 public class TcpProxyServer implements ProxyServer {
     private final int port;
 
@@ -76,8 +78,8 @@ public class TcpProxyServer implements ProxyServer {
                 source.getOutputStream().write(buffer, 0, bytesRead);
                 source.getOutputStream().flush();
             }
-        } catch (SocketException ignored) {
-            // socket closed by target
+        } catch (SocketException e) {
+            log.warn(e.getMessage());
         }
     }
 

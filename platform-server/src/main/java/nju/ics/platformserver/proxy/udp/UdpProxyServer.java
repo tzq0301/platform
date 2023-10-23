@@ -1,5 +1,6 @@
 package nju.ics.platformserver.proxy.udp;
 
+import lombok.extern.slf4j.Slf4j;
 import nju.ics.platformserver.proxy.ProxyServer;
 import nju.ics.platformserver.proxy.TargetServer;
 import nju.ics.platformserver.proxy.strategy.ProxyStrategy;
@@ -13,6 +14,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.HashSet;
 import java.util.Set;
 
+@Slf4j
 public class UdpProxyServer implements ProxyServer {
     private final int port;
 
@@ -76,7 +78,7 @@ public class UdpProxyServer implements ProxyServer {
                             sourcePacket.setData(dataToSource);
                             sourceSocket.send(sourcePacket);
                         } catch (IOException e) {
-                            e.printStackTrace();
+                            log.warn(e.getMessage());
                             break;
                         }
                     }

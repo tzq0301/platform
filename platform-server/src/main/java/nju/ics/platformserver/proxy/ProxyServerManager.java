@@ -1,6 +1,7 @@
 package nju.ics.platformserver.proxy;
 
 import jakarta.annotation.Nonnull;
+import lombok.extern.slf4j.Slf4j;
 import nju.ics.platformserver.net.Protocol;
 import nju.ics.platformserver.proxy.strategy.ProxyStrategy;
 import nju.ics.platformserver.proxy.tcp.TcpProxyServerFactory;
@@ -9,6 +10,7 @@ import nju.ics.platformserver.proxy.udp.UdpProxyServerFactory;
 import java.util.HashMap;
 import java.util.Map;
 
+@Slf4j
 public class ProxyServerManager {
     private final String host;
 
@@ -33,9 +35,11 @@ public class ProxyServerManager {
             };
             ProxyServer server = proxyServerFactory.newProxyServer(port);
             server.startAsDaemon();
+            log.info("start {} proxy server of port {}", protocol, proxyPort);
             return server;
         });
         proxyServer.addTargetServer(new TargetServer(host, actualPort));
+        log.info("add target server, proxy port = {}, actual port = {}", proxyPort, actualPort);
     }
 
     public synchronized void unregister(int proxyPort, int actualPort) {

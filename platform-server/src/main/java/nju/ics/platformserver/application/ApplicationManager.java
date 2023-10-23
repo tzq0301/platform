@@ -96,9 +96,11 @@ public class ApplicationManager {
                     HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
                     if (Boolean.TRUE.equals(Boolean.parseBoolean(response.body()))) {
+                        log.info("successful health check of application {}", application.id());
                         timer.cancel();
                     }
-                } catch (IOException | InterruptedException | URISyntaxException ignored) {
+                } catch (IOException | InterruptedException | URISyntaxException e) {
+                    log.warn("health check of application {}: {}", application.id(), e.getMessage());
                 }
             }
         }, 0L, TEST_CREATE_APPLICATION_SUCCESS_RETRY_INTERVAL.toMillis());
