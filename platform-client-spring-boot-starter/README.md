@@ -64,7 +64,7 @@
    @SpringBootApplication
    public class DecisionApp {
        public static void main(String[] args) {
-           SpringApplication.run(DecisionApp.class, args);  // <- 将第一个参数改为
+           SpringApplication.run(DecisionApp.class, args);  // <- 将第一个参数改为“启动类”
        }
    
        // ---------------------------------------
