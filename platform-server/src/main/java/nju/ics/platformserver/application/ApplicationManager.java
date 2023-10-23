@@ -1,5 +1,6 @@
 package nju.ics.platformserver.application;
 
+import com.github.dockerjava.api.exception.InternalServerErrorException;
 import com.github.dockerjava.api.exception.NotFoundException;
 import jakarta.annotation.Nonnull;
 import lombok.extern.slf4j.Slf4j;
@@ -63,6 +64,9 @@ public class ApplicationManager {
             dockerManager.pullImage(imageName, imageTag);
         } catch (NotFoundException e) {
             log.info("can not found {}:{} on docker hub, try using local image", imageName, imageTag);
+        } catch (InternalServerErrorException e) {
+            log.error("please try again: {}", e.getMessage());
+            throw new RuntimeException(e);
         }
 
         final String containerName = Applications.generateContainerName();
