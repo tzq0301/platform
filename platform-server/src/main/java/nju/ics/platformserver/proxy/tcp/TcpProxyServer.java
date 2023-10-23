@@ -29,7 +29,7 @@ public class TcpProxyServer implements ProxyServer {
     }
 
     @Override
-    public void startAsDaemon() {
+    public synchronized void startAsDaemon() {
         new Thread(() -> {
             try (ServerSocket serverSocket = new ServerSocket(this.port)) {
                 while (!stopped) {
@@ -82,17 +82,17 @@ public class TcpProxyServer implements ProxyServer {
     }
 
     @Override
-    public void stop() {
+    public synchronized void stop() {
         this.stopped = true;
     }
 
     @Override
-    public void addTargetServer(TargetServer targetServer) {
+    public synchronized void addTargetServer(TargetServer targetServer) {
         this.targetServers.add(targetServer);
     }
 
     @Override
-    public void removeTargetServer(TargetServer targetServer) {
+    public synchronized void removeTargetServer(TargetServer targetServer) {
         this.targetServers.remove(targetServer);
     }
 

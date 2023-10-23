@@ -4,6 +4,12 @@ import nju.ics.platformserver.proxy.ProxyServer;
 import nju.ics.platformserver.proxy.TargetServer;
 import nju.ics.platformserver.proxy.strategy.ProxyStrategy;
 
+import java.io.IOException;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
+import java.net.SocketException;
+import java.nio.charset.StandardCharsets;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -24,54 +30,71 @@ public class UdpProxyServer implements ProxyServer {
     }
 
     @Override
-    public void startAsDaemon() {
-        throw new UnsupportedOperationException();
+    public synchronized void startAsDaemon() {
+        new Thread(() -> { // daemon task
+            DatagramSocket sourceSocket;
+            try {
+                sourceSocket = new DatagramSocket(this.port);
+            } catch (SocketException e) {
+                throw new RuntimeException(e);
+            }
 
-//        new Thread(() -> {
-//            try (DatagramSocket datagramSocket = new DatagramSocket(this.port)) {
-//                while (!stopped) {
-//
-//                }
-//            } catch (SocketException e) {
-//                throw new RuntimeException(e);
-//            }
-//        }).start();
+            byte[] receivedFromSource = new byte[1024];
+            DatagramPacket sourcePacket = new DatagramPacket(receivedFromSource, receivedFromSource.length);
+
+            try {
+                sourceSocket.receive(sourcePacket);  // <- block here to wait for data
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+
+            // handle new proxy
+            new Thread(() -> {
+                TargetServer targetServer = this.proxyStrategy.select(this.targetServers);
+                try (DatagramSocket targetSocket = new DatagramSocket()) {
+                    // source -> target
+                    new Thread(() -> {
+                        String dataFromSource = new String(sourcePacket.getData(), sourcePacket.getOffset(), sourcePacket.getLength(), StandardCharsets.UTF_8);
+                        byte[] dataToTarget = dataFromSource.getBytes(StandardCharsets.UTF_8);
+
+                        try {
+                            DatagramPacket targetPacket = new DatagramPacket(dataToTarget, dataToTarget.length, InetAddress.getByName(targetServer.getHost()), targetServer.getPort());
+                            targetSocket.send(targetPacket);
+                        } catch (IOException e) {
+                            throw new RuntimeException(e);
+                        }
+                    }).start();
+
+                    // source <- target
+                    while (true) {
+                        try {
+                            byte[] receivedFromTarget = new byte[1024];
+                            DatagramPacket packet = new DatagramPacket(receivedFromTarget, receivedFromTarget.length, InetAddress.getByName(targetServer.getHost()), targetServer.getPort());
+                            targetSocket.receive(packet);
+                            String dataFromTarget = new String(packet.getData(), packet.getOffset(), packet.getLength());
+                            byte[] dataToSource = dataFromTarget.getBytes(StandardCharsets.UTF_8);
+                            sourcePacket.setData(dataToSource);
+                            sourceSocket.send(sourcePacket);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                            break;
+                        }
+                    }
+                } catch (SocketException e) {
+                    throw new RuntimeException(e);
+                } finally {
+                    if (!sourceSocket.isClosed()) {
+                        sourceSocket.close();
+                    }
+                }
+            }).start();
+        }).start();
     }
-
-//    @Override
-//    public synchronized void startAsDaemon() {
-//        new Thread(() -> {
-//            try (DatagramSocket ds = new DatagramSocket(this.port)) {
-//                while (this.loop.get()) {
-//                    byte[] buffer = new byte[1024];
-//                    DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
-//                    ds.receive(packet);
-//
-//                    String data = new String(packet.getData(), packet.getOffset(), packet.getLength(), StandardCharsets.UTF_8);
-//
-//                    forward(Objects.requireNonNull(targetServers.getLast()), data);
-//                }
-//            } catch (IOException e) {
-//                throw new RuntimeException(e);
-//            }
-//        }).start();
-//    }
 
     @Override
-    public void stop() {
+    public synchronized void stop() {
         this.stopped = true;
     }
-
-//    public synchronized void forward(TargetServer targetServer, String data) {
-//        try (DatagramSocket ds = new DatagramSocket()) {
-//            ds.connect(InetAddress.getByName("localhost"), targetServer.getPort());
-//            byte[] bytes = data.getBytes();
-//            DatagramPacket packet = new DatagramPacket(bytes, bytes.length);
-//            ds.send(packet);
-//        } catch (IOException e) {
-//            throw new RuntimeException(e);
-//        }
-//    }
 
     @Override
     public synchronized void addTargetServer(TargetServer targetServer) {

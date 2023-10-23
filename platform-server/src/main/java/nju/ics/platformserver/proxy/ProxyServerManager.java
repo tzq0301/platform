@@ -1,5 +1,6 @@
 package nju.ics.platformserver.proxy;
 
+import jakarta.annotation.Nonnull;
 import nju.ics.platformserver.net.Protocol;
 import nju.ics.platformserver.proxy.strategy.ProxyStrategy;
 import nju.ics.platformserver.proxy.tcp.TcpProxyServerFactory;
@@ -17,14 +18,14 @@ public class ProxyServerManager {
 
     private final ProxyServerFactory udpProxyServerFactory;
 
-    public ProxyServerManager(String host, ProxyStrategy proxyStrategy) {
+    public ProxyServerManager(@Nonnull String host, @Nonnull ProxyStrategy proxyStrategy) {
         this.host = host;
         this.tcpProxyServerFactory = new TcpProxyServerFactory(proxyStrategy);
         this.udpProxyServerFactory = new UdpProxyServerFactory(proxyStrategy);
         this.proxyServerMap = new HashMap<>();
     }
 
-    public synchronized void register(Protocol protocol, int proxyPort, int actualPort) {
+    public synchronized void register(@Nonnull Protocol protocol, int proxyPort, int actualPort) {
         ProxyServer proxyServer = proxyServerMap.computeIfAbsent(proxyPort, port -> {
             ProxyServerFactory proxyServerFactory = switch (protocol) {
                 case TCP -> tcpProxyServerFactory;
