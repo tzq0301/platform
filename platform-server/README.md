@@ -100,9 +100,10 @@ No response. Just take status code `200` as success.
 
 ```json5
 {
-  "name": "xxx",          // Docker 镜像名
-  "version": "yyy",       // Docker 镜像 Tag
-  "healthCheckPort": 8080 // 用于检查初始化状态的端口（默认为 HTTP 端口）
+  "name": "xxx",           // Docker 镜像名
+  "version": "yyy",        // Docker 镜像 Tag
+  "healthCheckPort": 8080, // 用于检查初始化状态的端口（默认为 HTTP 端口）
+  "udpPorts": [9998, 9999] // 要暴露的 UDP 端口号
 }
 ```
 
@@ -144,11 +145,12 @@ No response. Just take status code `200` as success.
 
 ```json5
 {
-  "oldApplicationId": "xxx",             // 被更新的 Application 的 ID
-  "newApplicationName": "xxx",           // 新的 Docker 镜像名
-  "newApplicationVersion": "yyy",        // 新的 Docker 镜像 Tag
-  "newApplicationHealthCheckPort": 8080, // 新的用于检查初始化状态的端口（默认为 HTTP 端口）
-  "updateStrategy": 1                    // 更新策略：0-默认 1-滚动
+  "oldApplicationId": "xxx",              // 被更新的 Application 的 ID
+  "newApplicationName": "xxx",            // 新应用的 Docker 镜像名
+  "newApplicationVersion": "yyy",         // 新应用的 Docker 镜像 Tag
+  "newApplicationHealthCheckPort": 8080,  // 新应用的用于检查初始化状态的端口（默认为 HTTP 端口）
+  "newApplicationUdpPorts": [9998, 9999], // 新应用的要暴露的 UDP 端口号
+  "updateStrategy": 1                     // 更新策略：0-默认 1-滚动
 }
 ```
 
