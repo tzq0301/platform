@@ -13,7 +13,7 @@ variables:
 maven-deploy:
   image: maven:3.6.3-openjdk-17
   script:
-    - 'cd platform-pom && mvn deploy -s ci_settings.xml && cd -'
+    - 'cd platform-pom && mvn -T 4 deploy -s ci_settings.xml && cd -'
   rules:
     - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
       when: manual
