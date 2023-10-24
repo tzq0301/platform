@@ -15,10 +15,18 @@ import org.springframework.web.servlet.mvc.method.annotation.RequestBodyAdviceAd
 import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
 
 import java.lang.reflect.Type;
+import java.util.List;
 
 @RestControllerAdvice
 @Slf4j
 public class LogInterceptor extends RequestBodyAdviceAdapter implements ResponseBodyAdvice<Object> {
+    private static final List<String> WHITE_LIST = List.of(
+            "/platform/application/list",
+            "/platform/pubsub/publish",
+            "/platform/pubsub/listUnreadMessages",
+            "/platform/resource/keepAlive",
+            "/platform/resource/graph");
+
     @Resource
     HttpServletRequest request;
 
@@ -30,8 +38,11 @@ public class LogInterceptor extends RequestBodyAdviceAdapter implements Response
     @Nonnull
     @Override
     public Object afterBodyRead(@Nonnull Object body, @Nonnull HttpInputMessage inputMessage, @Nonnull MethodParameter parameter, @Nonnull Type targetType, @Nonnull Class<? extends HttpMessageConverter<?>> converterType) {
-        String message = String.format("REQUEST: method = [%s], path = [%s], body = [%s]", request.getMethod(), request.getRequestURI(), body);
-        log.info(message);
+        if (!WHITE_LIST.contains(request.getRequestURI())) {
+            String message = String.format("REQUEST: method = [%s], path = [%s], body = [%s]", request.getMethod(), request.getRequestURI(), body);
+            log.info(message);
+        }
+
         return super.afterBodyRead(body, inputMessage, parameter, targetType, converterType);
     }
 
@@ -48,8 +59,10 @@ public class LogInterceptor extends RequestBodyAdviceAdapter implements Response
 
     @Override
     public Object beforeBodyWrite(Object body, @Nonnull MethodParameter returnType, @Nonnull MediaType selectedContentType, @Nonnull Class<? extends HttpMessageConverter<?>> selectedConverterType, @Nonnull ServerHttpRequest request, @Nonnull ServerHttpResponse response) {
-        String message = String.format("RESPONSE: method = [%s], path = [%s], body = [%s]", request.getMethod(), request.getURI().getPath(), body);
-        log.info(message);
+        if (!WHITE_LIST.contains(request.getURI().getPath())) {
+            String message = String.format("RESPONSE: method = [%s], path = [%s], body = [%s]", request.getMethod(), request.getURI().getPath(), body);
+            log.info(message);
+        }
 
         return body;
     }
