@@ -14,6 +14,8 @@ import nju.ics.platformserver.server.service.ApplicationService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/application")
@@ -26,7 +28,7 @@ public class ApplicationController {
 
     @PostMapping("/create")
     public CreateApplicationResponse createApplication(@Nonnull @RequestBody @Valid CreateApplicationRequest request) {
-        CreateApplicationCmd cmd = new CreateApplicationCmd(request.name(), request.version(), request.healthCheckPort(), List.of(), List.copyOf(request.udpPorts()));
+        CreateApplicationCmd cmd = new CreateApplicationCmd(request.name(), request.version(), request.healthCheckPort(), List.of(), List.copyOf(Optional.ofNullable(request.udpPorts()).orElse(Set.of())));
         Application application = this.applicationService.createApplication(cmd);
         return new CreateApplicationResponse(application.id(), application.name(), application.version());
     }
@@ -40,7 +42,7 @@ public class ApplicationController {
     @PostMapping("/update")
     public UpdateApplicationResponse updateApplication(@Nonnull @RequestBody @Valid UpdateApplicationRequest request) {
         CreateApplicationCmd createApplicationCmd = new CreateApplicationCmd(request.newApplicationName(),
-                request.newApplicationVersion(), request.newApplicationHealthCheckPort(), List.of(), List.copyOf(request.newApplicationUdpPorts()));
+                request.newApplicationVersion(), request.newApplicationHealthCheckPort(), List.of(), List.copyOf(Optional.ofNullable(request.newApplicationUdpPorts()).orElse(Set.of())));
         DestroyApplicationCmd destroyApplicationCmd = new DestroyApplicationCmd(request.oldApplicationId());
         UpdateStrategy updateStrategy = switch (request.updateStrategy()) {
             case DEFAULT -> new DefaultUpdateStrategy();
