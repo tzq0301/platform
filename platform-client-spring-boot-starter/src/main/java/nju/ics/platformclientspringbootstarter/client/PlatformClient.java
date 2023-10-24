@@ -37,7 +37,7 @@ public class PlatformClient {
     }
 
     public void register(@Nonnull Set<Topic> pubTopics, @Nonnull Set<Topic> subTopics) {
-        var response = register(new RegisterRequest(properties.getClientType(), properties.getClientName(),
+        var response = register(new RegisterRequest(properties.getClientName(), properties.getClientType(),
                 pubTopics.stream().map(Topic::value).collect(Collectors.toSet()),
                 subTopics.stream().map(Topic::value).collect(Collectors.toSet())));
         this.clientId = response.clientId();
