@@ -72,7 +72,7 @@ public class ResourceService {
     private void removeDeadClients() {
         try {
             List<Client> removed = alivenessChecker.removeDeadClients();
-            log.info("【定时任务】移除 Dead Clients {}", removed);
+            log.info("【定时任务】移除 Dead Clients {}", removed.isEmpty() ? "" : removed);
         } catch (NoSuchElementException ignored) {
         }
     }

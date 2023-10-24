@@ -1,6 +1,7 @@
 package nju.ics.platformserver.server.controller;
 
 import jakarta.annotation.Nonnull;
+import jakarta.validation.Valid;
 import nju.ics.platformmodel.resource.*;
 import nju.ics.platformserver.pubsub.Client;
 import nju.ics.platformserver.pubsub.Topic;
@@ -19,7 +20,7 @@ public class ResourceController {
     }
 
     @PostMapping("/register")
-    public RegisterResponse register(@Nonnull @RequestBody RegisterRequest request) {
+    public RegisterResponse register(@Nonnull @RequestBody @Valid RegisterRequest request) {
         var pubTopics = request.pubTopics().stream().map(Topic::new).collect(Collectors.toSet());
         var subTopics = request.subTopics().stream().map(Topic::new).collect(Collectors.toSet());
         Client client = resourceService.register(request.clientName(), request.clientType(), pubTopics, subTopics);
@@ -27,7 +28,7 @@ public class ResourceController {
     }
 
     @PostMapping("/unregister")
-    public void unregister(@Nonnull @RequestBody UnregisterRequest request) {
+    public void unregister(@Nonnull @RequestBody @Valid UnregisterRequest request) {
         resourceService.unregister(request.clientId());
     }
 
@@ -37,7 +38,7 @@ public class ResourceController {
     }
 
     @PostMapping("/keepAlive")
-    public void keepAlive(@Nonnull @RequestBody KeepAliveRequest request) {
+    public void keepAlive(@Nonnull @RequestBody @Valid KeepAliveRequest request) {
         resourceService.keepAlive(request.clientId());
     }
 }

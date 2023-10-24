@@ -17,8 +17,10 @@ public class JacksonConfig {
         mapper.registerModule(new JavaTimeModule());
         mapper.registerModule(new Jdk8Module());
 
+        // SerializationFeature
         mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
 
+        // DeserializationFeature
         mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
 
         return mapper;

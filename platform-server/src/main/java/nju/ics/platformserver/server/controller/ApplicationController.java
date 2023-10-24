@@ -1,6 +1,7 @@
 package nju.ics.platformserver.server.controller;
 
 import jakarta.annotation.Nonnull;
+import jakarta.validation.Valid;
 import nju.ics.platformmodel.application.*;
 import nju.ics.platformserver.application.Application;
 import nju.ics.platformserver.application.model.CreateApplicationCmd;
@@ -24,20 +25,20 @@ public class ApplicationController {
     }
 
     @PostMapping("/create")
-    public CreateApplicationResponse createApplication(@Nonnull @RequestBody CreateApplicationRequest request) {
+    public CreateApplicationResponse createApplication(@Nonnull @RequestBody @Valid CreateApplicationRequest request) {
         CreateApplicationCmd cmd = new CreateApplicationCmd(request.name(), request.version(), request.healthCheckPort(), List.of(), List.of());
         Application application = this.applicationService.createApplication(cmd);
         return new CreateApplicationResponse(application.id(), application.name(), application.version());
     }
 
     @PostMapping("/destroy")
-    public void destroyApplication(@Nonnull @RequestBody DestroyApplicationRequest request) {
+    public void destroyApplication(@Nonnull @RequestBody @Valid DestroyApplicationRequest request) {
         DestroyApplicationCmd cmd = new DestroyApplicationCmd(request.applicationId());
         this.applicationService.destroyApplication(cmd);
     }
 
     @PostMapping("/update")
-    public UpdateApplicationResponse updateApplication(@Nonnull @RequestBody UpdateApplicationRequest request) {
+    public UpdateApplicationResponse updateApplication(@Nonnull @RequestBody @Valid UpdateApplicationRequest request) {
         CreateApplicationCmd createApplicationCmd = new CreateApplicationCmd(request.newApplicationName(),
                 request.newApplicationVersion(), request.newApplicationHealthCheckPort(), List.of(), List.of());
         DestroyApplicationCmd destroyApplicationCmd = new DestroyApplicationCmd(request.oldApplicationId());

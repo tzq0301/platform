@@ -1,10 +1,12 @@
 package nju.ics.platformmodel.application;
 
 import jakarta.annotation.Nonnull;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 
-public record UpdateApplicationRequest(@Nonnull String oldApplicationId,
-                                       @Nonnull String newApplicationName,
-                                       @Nonnull String newApplicationVersion,
-                                       @Nonnull Integer newApplicationHealthCheckPort,
-                                       @Nonnull UpdateStrategyEnum updateStrategy) {
+public record UpdateApplicationRequest(@Nonnull @NotNull @NotEmpty String oldApplicationId,
+                                       @Nonnull @NotNull @NotEmpty String newApplicationName,
+                                       @Nonnull @NotNull @NotEmpty String newApplicationVersion,
+                                       @Nonnull @NotNull Integer newApplicationHealthCheckPort,
+                                       @Nonnull @NotNull UpdateStrategyEnum updateStrategy) {
 }

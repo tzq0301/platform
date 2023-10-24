@@ -1,6 +1,7 @@
 package nju.ics.platformserver.server.controller;
 
 import jakarta.annotation.Nonnull;
+import jakarta.validation.Valid;
 import nju.ics.platformmodel.pubsub.ListUnreadMessagesRequest;
 import nju.ics.platformmodel.pubsub.ListUnreadMessagesResponse;
 import nju.ics.platformmodel.pubsub.MessageDTO;
@@ -24,13 +25,13 @@ public class PubSubController {
     }
 
     @PostMapping("/publish")
-    public void publish(@Nonnull @RequestBody PublishRequest request) {
+    public void publish(@Nonnull @RequestBody @Valid PublishRequest request) {
         MessageDTO message = request.message();
         this.pubsubService.publish(new nju.ics.platformserver.pubsub.Message<>(message.id(), message.publisherId(), new Topic(message.topic()), message.data(), message.createTime()));
     }
 
     @PostMapping("/listUnreadMessages")
-    public ListUnreadMessagesResponse listUnreadMessages(@Nonnull @RequestBody ListUnreadMessagesRequest request) {
+    public ListUnreadMessagesResponse listUnreadMessages(@Nonnull @RequestBody @Valid ListUnreadMessagesRequest request) {
         List<MessageDTO> messages = pubsubService.listUnreadMessages(request.clientId())
                 .stream()
                 .map(message -> new MessageDTO(message.id(), message.publisherId(),
