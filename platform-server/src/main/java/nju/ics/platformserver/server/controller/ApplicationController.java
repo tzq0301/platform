@@ -40,7 +40,7 @@ public class ApplicationController {
     @PostMapping("/update")
     public UpdateApplicationResponse updateApplication(@Nonnull @RequestBody @Valid UpdateApplicationRequest request) {
         CreateApplicationCmd createApplicationCmd = new CreateApplicationCmd(request.newApplicationName(),
-                request.newApplicationVersion(), request.newApplicationHealthCheckPort(), List.of(), List.of());
+                request.newApplicationVersion(), request.newApplicationHealthCheckPort(), List.of(), List.copyOf(request.newApplicationUdpPorts()));
         DestroyApplicationCmd destroyApplicationCmd = new DestroyApplicationCmd(request.oldApplicationId());
         UpdateStrategy updateStrategy = switch (request.updateStrategy()) {
             case DEFAULT -> new DefaultUpdateStrategy();
