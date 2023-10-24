@@ -4,17 +4,18 @@ import jakarta.annotation.Nonnull;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 public class PubSubStore implements Cloneable {
     private final Map<Client, Set<RelationPair>> store;
 
     public PubSubStore() {
-        this.store = new HashMap<>();
+        this.store = new ConcurrentHashMap<>();
     }
 
     public synchronized void add(@Nonnull Client client, @Nonnull Set<RelationPair> pubsubRelations) {
-        store.computeIfAbsent(client, v -> new HashSet<>()).addAll(pubsubRelations);
+        store.computeIfAbsent(client, v -> Collections.newSetFromMap(new ConcurrentHashMap<>())).addAll(pubsubRelations);
     }
 
     public synchronized void remove(@Nonnull Client client) {
