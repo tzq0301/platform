@@ -26,7 +26,7 @@ public class ApplicationController {
 
     @PostMapping("/create")
     public CreateApplicationResponse createApplication(@Nonnull @RequestBody @Valid CreateApplicationRequest request) {
-        CreateApplicationCmd cmd = new CreateApplicationCmd(request.name(), request.version(), request.healthCheckPort(), List.of(), List.of());
+        CreateApplicationCmd cmd = new CreateApplicationCmd(request.name(), request.version(), request.healthCheckPort(), List.of(), List.copyOf(request.udpPorts()));
         Application application = this.applicationService.createApplication(cmd);
         return new CreateApplicationResponse(application.id(), application.name(), application.version());
     }
