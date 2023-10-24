@@ -46,6 +46,21 @@ public class ApplicationManager {
     }
 
     public Application createApplication(@Nonnull CreateApplicationCmd cmd) {
+        final String imageName = cmd.name();
+        final String imageTag = cmd.version();
+
+        try {
+            dockerManager.pullImage(imageName, imageTag);
+            log.info("尝试从 Docker Hub 拉取镜像 {}:{}", imageName, imageTag);
+        } catch (NotFoundException e) {
+            log.info("未能在 Docker Hub 中找到 {}:{}，尝试使用本地镜像", imageName, imageTag);
+        } catch (InternalServerErrorException e) {
+            log.error("请再次尝试：{}", e.getMessage());
+            throw new RuntimeException(e);
+        }
+
+        final String containerName = Applications.generateContainerName();
+
         final DockerPortBinding healthCheckPortBinding = new DockerPortBinding(Protocol.TCP, randomUnusedPortsManager.generate(), cmd.healthCheckPort());
         final Set<DockerPortBinding> portBindings = Stream.concat(
                         cmd.exposedTcpPorts().stream() // TCPs
@@ -57,23 +72,14 @@ public class ApplicationManager {
                 .collect(Collectors.toSet());
         portBindings.add(healthCheckPortBinding);
 
-        final String imageName = cmd.name();
-        final String imageTag = cmd.version();
-
-        try {
-            dockerManager.pullImage(imageName, imageTag);
-        } catch (NotFoundException e) {
-            log.info("can not found {}:{} on docker hub, try using local image", imageName, imageTag);
-        } catch (InternalServerErrorException e) {
-            log.error("please try again: {}", e.getMessage());
-            throw new RuntimeException(e);
-        }
-
-        final String containerName = Applications.generateContainerName();
         final Map<String, String> containerLabels = Applications.generateDefaultLabels(cmd.healthCheckPort());
 
         String containerId = dockerManager.createContainer(imageName, imageTag, containerName, portBindings, containerLabels);
+        log.info("创建 Docker Container [imageName = {}, imageTag = {}, containerName = {}, portBindings = {}, containerLabels = {}]",
+                imageName, imageTag, containerName, portBindings, containerLabels);
+
         dockerManager.startContainer(containerId);
+        log.info("启动 Docker Container [id = {}]", containerId);
 
         final Application application = Applications.from(dockerManager.getContainerById(containerId));
 
@@ -96,11 +102,11 @@ public class ApplicationManager {
                     HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
                     if (Boolean.TRUE.equals(Boolean.parseBoolean(response.body()))) {
-                        log.info("successful health check of application {}", application.id());
+                        log.info("检测到 Application 启动成功 [id = {}]", application.id());
                         timer.cancel();
                     }
                 } catch (IOException | InterruptedException | URISyntaxException e) {
-                    log.warn("health check of application {}: {}", application.id(), e.getMessage());
+                    log.warn("尝试“检测 Application 是否启动成功”失败，进行重试 [id = {}]: {}", application.id(), e.getMessage());
                 }
             }
         }, 0L, TEST_CREATE_APPLICATION_SUCCESS_RETRY_INTERVAL.toMillis());
@@ -131,10 +137,14 @@ public class ApplicationManager {
         });
 
         dockerManager.stopContainer(container.id());
+        log.info("停止 Docker Container [id = {}]", containerId);
+
         dockerManager.removeContainer(container.id());
+        log.info("删除 Docker Container [id = {}]", containerId);
     }
 
     public Application updateApplication(@Nonnull UpdateApplicationCmd cmd) {
+        log.info("更新 Application [{}]", cmd);
         return cmd.updateStrategy().update(
                 () -> createApplication(cmd.createApplicationCmd()),
                 () -> destroyApplication(cmd.destroyApplicationCmd()));

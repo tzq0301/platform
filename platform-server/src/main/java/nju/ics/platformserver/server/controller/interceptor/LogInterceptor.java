@@ -48,6 +48,9 @@ public class LogInterceptor extends RequestBodyAdviceAdapter implements Response
 
     @Override
     public Object beforeBodyWrite(Object body, @Nonnull MethodParameter returnType, @Nonnull MediaType selectedContentType, @Nonnull Class<? extends HttpMessageConverter<?>> selectedConverterType, @Nonnull ServerHttpRequest request, @Nonnull ServerHttpResponse response) {
+        String message = String.format("RESPONSE: method = [%s], path = [%s], body = [%s]", request.getMethod(), request.getURI().getPath(), body);
+        log.info(message);
+
         return body;
     }
 }

@@ -7,6 +7,7 @@ import nju.ics.platformserver.pubsub.*;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -31,7 +32,7 @@ public class ResourceService {
         pubsub.registerClient(client, pubTopics, subTopics);
         alivenessChecker.keepAlive(client);
 
-        log.info("resource registered: {}", client);
+        log.info("Resource 注册成功 [id = {}]", client);
 
         return client;
     }
@@ -40,7 +41,7 @@ public class ResourceService {
         Client client = Clients.getById(clientId);
         pubsub.unregisterClient(client);
 
-        log.info("resource unregistered: {}", client);
+        log.info("Resource 注销成功 [id = {}]", client);
     }
 
     public GraphResponse graph() {
@@ -70,7 +71,8 @@ public class ResourceService {
     @Scheduled(cron = "*/30 * * * * ?")
     private void removeDeadClients() {
         try {
-            alivenessChecker.removeDeadClients();
+            List<Client> removed = alivenessChecker.removeDeadClients();
+            log.info("【定时任务】移除 Dead Clients {}", removed);
         } catch (NoSuchElementException ignored) {
         }
     }

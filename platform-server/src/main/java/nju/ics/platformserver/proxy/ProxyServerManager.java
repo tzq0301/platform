@@ -35,16 +35,17 @@ public class ProxyServerManager {
             };
             ProxyServer server = proxyServerFactory.newProxyServer(port);
             server.startAsDaemon();
-            log.info("start {} proxy server of port {}", protocol, proxyPort);
+            log.info("启动 {} ProxyServer [port = {}]", protocol, proxyPort);
             return server;
         });
         proxyServer.addTargetServer(new TargetServer(host, actualPort));
-        log.info("add target server, proxy port = {}, actual port = {}", proxyPort, actualPort);
+        log.info("为 ProxyServer [port = {}] 增加 TargetServer [port = {}]", proxyPort, actualPort);
     }
 
     public synchronized void unregister(int proxyPort, int actualPort) {
         ProxyServer proxyServer = proxyServerMap.get(proxyPort);
         proxyServer.stop();
         proxyServer.removeTargetServer(new TargetServer(host, actualPort));
+        log.info("为 ProxyServer [port = {}] 移除 TargetServer [port = {}]", proxyPort, actualPort);
     }
 }
