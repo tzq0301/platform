@@ -111,6 +111,6 @@ public class DockerManager {
                 .filter(container -> Objects.equals(containerId, container.getId()))
                 .findAny()
                 .map(DockerContainer::new)
-                .orElseThrow(() -> new IllegalArgumentException(String.format("container with id %s not exists", containerId)));
+                .orElseThrow(() -> new IllegalArgumentException(String.format("Container 不存在 [id =  %s]", containerId)));
     }
 }
