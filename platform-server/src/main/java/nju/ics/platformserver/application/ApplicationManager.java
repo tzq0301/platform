@@ -52,12 +52,13 @@ public class ApplicationManager {
         try {
             dockerManager.pullImage(imageName, imageTag);
             log.info("尝试从 Docker Hub 拉取镜像 {}:{}", imageName, imageTag);
-        } catch (NotFoundException e) {
+        } catch (NotFoundException | InternalServerErrorException e) {
             log.info("未能在 Docker Hub 中找到 {}:{}，尝试使用本地镜像", imageName, imageTag);
-        } catch (InternalServerErrorException e) {
-            log.error("请再次尝试：{}", e.getMessage());
-            throw new RuntimeException(e);
         }
+//        } catch (InternalServerErrorException e) {
+//            log.error("请再次尝试：{}", e.getMessage());
+//            throw new RuntimeException(e);
+//        }
 
         final String containerName = Applications.generateContainerName();
 
