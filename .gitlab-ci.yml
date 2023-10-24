@@ -1,58 +1,19 @@
-stages:
-  - begin
-  - maven deploy
+image: maven:latest]
 
 cache:
   paths:
-    - .m2/repository
-  when: always
+    - .m2/repository/
+    - target/
 
 variables:
-  MAVEN_OPTS: "-Dmaven.repo.local=$CI_PROJECT_DIR/.m2/repository"
+  MAVEN_CLI_OPTS: "-s .m2/settings.xml --batch-mode"
+  MAVEN_OPTS: "-Dmaven.repo.local=.m2/repository"
   GIT_DEPTH: 1
 
-begin:
-  stage: begin
-  script:
-    - echo 'hello'
-  rules:
-    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
-      when: manual
-
-maven-deploy-pom:
-  stage: maven deploy
+maven-deploy:
   image: maven:3.6.3-openjdk-17
   script:
     - 'cd platform-pom && mvn deploy -s ci_settings.xml && cd -'
   rules:
     - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
-
-maven-deploy-model:
-  stage: maven deploy
-  image: maven:3.6.3-openjdk-17
-  needs:
-    - maven-deploy-pom
-  script:
-    - 'cd platform-model && mvn deploy -s ci_settings.xml && cd -'
-  rules:
-    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
-
-maven-deploy-client:
-  stage: maven deploy
-  image: maven:3.6.3-openjdk-17
-  needs:
-    - maven-deploy-model
-  script:
-    - 'cd platform-client-spring-boot-starter && mvn deploy -s ci_settings.xml && cd -'
-  rules:
-    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
-
-maven-deploy-server:
-  stage: maven deploy
-  image: maven:3.6.3-openjdk-17
-  needs:
-    - maven-deploy-model
-  script:
-    - 'cd platform-server && mvn deploy -s ci_settings.xml && cd -'
-  rules:
-    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+      when: manual
