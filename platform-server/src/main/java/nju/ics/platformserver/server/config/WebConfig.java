@@ -21,9 +21,6 @@ import java.util.Objects;
 @SpringBootConfiguration
 @Slf4j
 public class WebConfig implements WebMvcConfigurer {
-    @Resource
-    private LogInterceptor logInterceptor;
-
     @Bean
     public CorsFilter corsFilter() {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
@@ -45,7 +42,7 @@ public class WebConfig implements WebMvcConfigurer {
     public void addInterceptors(@Nonnull InterceptorRegistry registry) {
         registry.addInterceptor(new HandlerInterceptor() {
             @Override
-            public boolean preHandle(@Nonnull HttpServletRequest request, @Nonnull HttpServletResponse response, @Nonnull Object handler) throws Exception {
+            public boolean preHandle(@Nonnull HttpServletRequest request, @Nonnull HttpServletResponse response, @Nonnull Object handler) {
                 if (Objects.equals(HttpMethod.GET.name(), request.getMethod())) {
                     String message = String.format("REQUEST: method = [%s], path = [%s]", request.getMethod(), request.getRequestURI());
                     log.info(message);
