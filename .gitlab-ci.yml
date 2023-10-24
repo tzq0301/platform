@@ -2,12 +2,11 @@ image: maven:latest]
 
 cache:
   paths:
-    - .m2/repository/
-    - target/
+    - .m2/repository
+  when: always
 
 variables:
-  MAVEN_CLI_OPTS: "-s .m2/settings.xml --batch-mode"
-  MAVEN_OPTS: "-Dmaven.repo.local=.m2/repository"
+  MAVEN_OPTS: "-Dmaven.repo.local=$CI_PROJECT_DIR/.m2/repository"
   GIT_DEPTH: 1
 
 maven-deploy:

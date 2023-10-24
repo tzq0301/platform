@@ -12,7 +12,7 @@ import java.nio.charset.StandardCharsets;
 
 public class TestProxyUDP {
     @Test
-    @Disabled
+//    @Disabled
     void test() throws InterruptedException {
         ProxyServerManager manager = new ProxyServerManager("localhost", new GetLatestProxyStrategy());
         manager.register(Protocol.UDP, 6000, 7000);

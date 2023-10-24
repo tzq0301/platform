@@ -44,52 +44,54 @@ public class UdpProxyServer implements ProxyServer {
             byte[] receivedFromSource = new byte[1024];
             DatagramPacket sourcePacket = new DatagramPacket(receivedFromSource, receivedFromSource.length);
 
-            try {
-                sourceSocket.receive(sourcePacket);  // <- block here to wait for data
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-
-            // handle new proxy
-            new Thread(() -> {
-                TargetServer targetServer = this.proxyStrategy.select(this.targetServers);
-                try (DatagramSocket targetSocket = new DatagramSocket()) {
-                    // source -> target
-                    new Thread(() -> {
-                        String dataFromSource = new String(sourcePacket.getData(), sourcePacket.getOffset(), sourcePacket.getLength(), StandardCharsets.UTF_8);
-                        byte[] dataToTarget = dataFromSource.getBytes(StandardCharsets.UTF_8);
-
-                        try {
-                            DatagramPacket targetPacket = new DatagramPacket(dataToTarget, dataToTarget.length, InetAddress.getByName(targetServer.getHost()), targetServer.getPort());
-                            targetSocket.send(targetPacket);
-                        } catch (IOException e) {
-                            throw new RuntimeException(e);
-                        }
-                    }).start();
-
-                    // source <- target
-                    while (true) {
-                        try {
-                            byte[] receivedFromTarget = new byte[1024];
-                            DatagramPacket packet = new DatagramPacket(receivedFromTarget, receivedFromTarget.length, InetAddress.getByName(targetServer.getHost()), targetServer.getPort());
-                            targetSocket.receive(packet);
-                            String dataFromTarget = new String(packet.getData(), packet.getOffset(), packet.getLength());
-                            byte[] dataToSource = dataFromTarget.getBytes(StandardCharsets.UTF_8);
-                            sourcePacket.setData(dataToSource);
-                            sourceSocket.send(sourcePacket);
-                        } catch (IOException e) {
-                            log.warn(e.getMessage());
-                            break;
-                        }
-                    }
-                } catch (SocketException e) {
+            while (!stopped) {
+                try {
+                    sourceSocket.receive(sourcePacket);  // <- block here to wait for data
+                } catch (IOException e) {
                     throw new RuntimeException(e);
-                } finally {
-                    if (!sourceSocket.isClosed()) {
-                        sourceSocket.close();
-                    }
                 }
-            }).start();
+
+                // handle new proxy
+                new Thread(() -> {
+                    TargetServer targetServer = this.proxyStrategy.select(this.targetServers);
+                    try (DatagramSocket targetSocket = new DatagramSocket()) {
+                        // source -> target
+                        new Thread(() -> {
+                            String dataFromSource = new String(sourcePacket.getData(), sourcePacket.getOffset(), sourcePacket.getLength(), StandardCharsets.UTF_8);
+                            byte[] dataToTarget = dataFromSource.getBytes(StandardCharsets.UTF_8);
+
+                            try {
+                                DatagramPacket targetPacket = new DatagramPacket(dataToTarget, dataToTarget.length, InetAddress.getByName(targetServer.getHost()), targetServer.getPort());
+                                targetSocket.send(targetPacket);
+                            } catch (IOException e) {
+                                throw new RuntimeException(e);
+                            }
+                        }).start();
+
+                        // source <- target
+                        while (true) {
+                            try {
+                                byte[] receivedFromTarget = new byte[1024];
+                                DatagramPacket packet = new DatagramPacket(receivedFromTarget, receivedFromTarget.length, InetAddress.getByName(targetServer.getHost()), targetServer.getPort());
+                                targetSocket.receive(packet);
+                                String dataFromTarget = new String(packet.getData(), packet.getOffset(), packet.getLength());
+                                byte[] dataToSource = dataFromTarget.getBytes(StandardCharsets.UTF_8);
+                                sourcePacket.setData(dataToSource);
+                                sourceSocket.send(sourcePacket);
+                            } catch (IOException e) {
+                                log.warn(e.getMessage());
+                                break;
+                            }
+                        }
+                    } catch (SocketException e) {
+                        throw new RuntimeException(e);
+                    } finally {
+                        if (!sourceSocket.isClosed()) {
+                            sourceSocket.close();
+                        }
+                    }
+                }).start();
+            }
         }).start();
     }
 
