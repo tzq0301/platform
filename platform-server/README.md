@@ -197,6 +197,18 @@ No response. Just take status code `200` as success.
 
 </details>
 
+## Pub/Sub Design
+
+![img/pubsub.png](img/pubsub.png)
+
+## Resource Design
+
+![img/resource.png](img/resource.png)
+
+## Application Design
+
+![img/application.png](img/application.png)
+
 ## Proxy Design
 
 ![img/proxy.png](img/proxy.png)
