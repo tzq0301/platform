@@ -1,4 +1,3 @@
-mvn clean package
 docker login
 #docker buildx create \
 #  --name multi-platform \
