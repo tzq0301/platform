@@ -23,8 +23,7 @@ sync-to-github:
   image: bitnami/git
   stage: deploy
   script:
-    - git remote remove origin
-    - git remote add origin https://$GITHUB_PAT@github.com/$GITHUB_USERNAME/$GITHUB_REPO.git
-    - git push -u origin main -f
+    - git remote add github https://$GITHUB_PAT@github.com/$GITHUB_USERNAME/$GITHUB_REPO.git
+    - git push -u github main -f
   rules:
     - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
