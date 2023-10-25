@@ -1,19 +1,19 @@
 # Platform
 
-
-
 ## Pub/Sub Design
 
-![img/pubsub.png](platform-server/img/pubsub.png)
+![img/pubsub.png](img/pubsub.png)
+
+![img/pubsub-model.png](img/pubsub-model.png)
 
 ## Resource Design
 
-![img/resource.png](platform-server/img/resource.png)
+![img/resource.png](img/resource.png)
 
 ## Application Design
 
-![img/application.png](platform-server/img/application.png)
+![img/application.png](img/application.png)
 
 ## Proxy Design
 
-![img/proxy.png](platform-server/img/proxy.png)
+![img/proxy.png](img/proxy.png)
