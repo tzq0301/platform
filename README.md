@@ -4,6 +4,8 @@
 
 ![img/pubsub.png](img/pubsub.png)
 
+### Pull Model
+
 ![img/pubsub-model.png](img/pubsub-model.png)
 
 ## Resource Design
