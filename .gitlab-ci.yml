@@ -24,6 +24,6 @@ sync-to-github:
   stage: deploy
   script:
     - git remote add github https://$GITHUB_PAT@github.com/$GITHUB_USERNAME/$GITHUB_REPO.git
-    - git push -u github main -f
+    - git push -u github main
   rules:
     - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
