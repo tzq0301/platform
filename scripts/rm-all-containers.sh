@@ -1,4 +1,4 @@
-echo 'Are you sure? (y/N) '
+echo 'Are you sure? (Enter: y/N) '
 
 read sure
 
