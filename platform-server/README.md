@@ -2,8 +2,6 @@
 
 ## API
 
----
-
 ### Resource Management
 
 <details>
