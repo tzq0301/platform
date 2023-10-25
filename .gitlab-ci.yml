@@ -1,3 +1,6 @@
+stages:
+  - deploy
+
 cache:
   paths:
     - .m2/repository
@@ -9,6 +12,7 @@ variables:
 
 maven-deploy:
   image: maven:3.6.3-openjdk-17
+  stage: deploy
   script:
     - 'cd platform-pom && mvn -T 4 deploy -s ci_settings.xml && cd -'
   rules:
@@ -16,6 +20,8 @@ maven-deploy:
       when: manual
 
 sync-to-github:
+  image: bitnami/git
+  stage: deploy
   script:
     - git remote add origin https://${GITHUB_PAT}@github.com/${GITHUB_USERNAME}/${GITHUB_REPO}.git
     - git push -f
