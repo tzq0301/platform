@@ -1,8 +1,6 @@
 # Platform Server
 
-## API
-
-### Resource Management
+## HTTP Endpoints
 
 <details>
  <summary><code>POST</code> <code><b>/platform/resource/register</b></code></summary>
@@ -189,6 +187,74 @@ No response. Just take status code `200` as success.
       "name": "yyy",   // Docker 镜像名
       "version": "zzz" // Docker 镜像 Tag
     }
+  ]
+}
+```
+
+</details>
+
+---
+
+<details>
+ <summary><code>POST</code> <code><b>/platform/pubsub/publish</b></code></summary>
+
+#### Request Example
+
+```json5
+{
+  "message": {
+    "id": "xxx",          // 消息 ID
+    "publisherId": "yyy", // 发布者 ID
+    "topic": "zzz",       // 承载消息的 Topic
+    "data": {             // nullable object 
+      ...
+    },
+    "createTime": "aaa"   // 消息创建时间
+  }
+}
+```
+
+#### Response Example
+
+No response. Just take status code `200` as success.
+
+</details>
+
+<details>
+ <summary><code>POST</code> <code><b>/platform/pubsub/listUnreadMessages</b></code></summary>
+
+#### Request Example
+
+```json5
+{
+  "clientId": "xxx" // Client ID
+}
+```
+
+#### Response Example
+
+```json5
+{
+  "messages": [
+    {
+      "id": "xxx",          // 消息 ID
+      "publisherId": "yyy", // 发布者 ID
+      "topic": "zzz",       // 承载消息的 Topic
+      "data": {             // nullable object 
+        ...
+      },
+      "createTime": "aaa"   // 消息创建时间
+    },
+    {
+      "id": "xxx",          // 消息 ID
+      "publisherId": "yyy", // 发布者 ID
+      "topic": "zzz",       // 承载消息的 Topic
+      "data": {             // nullable object 
+        ...
+      },
+      "createTime": "aaa"   // 消息创建时间
+    },
+    ...
   ]
 }
 ```
