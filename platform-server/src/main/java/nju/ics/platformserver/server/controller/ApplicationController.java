@@ -55,10 +55,11 @@ public class ApplicationController {
 
     @GetMapping("/list")
     public ListApplicationResponse listApplications() {
-        List<ApplicationDTO> applications = this.applicationService.listApplications()
-                .stream()
-                .map(application -> new ApplicationDTO(application.id(), application.name(), application.version()))
-                .toList();
-        return new ListApplicationResponse(applications);
+//        List<ApplicationDTO> applications = this.applicationService.listApplications()
+//                .stream()
+//                .map(application -> new ApplicationDTO(application.id(), application.name(), application.version()))
+//                .toList();
+//        return new ListApplicationResponse(applications);
+        return new ListApplicationResponse(List.of());
     }
 }
