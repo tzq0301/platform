@@ -11,7 +11,7 @@ import nju.ics.platformserver.docker.DockerManager;
 import nju.ics.platformserver.docker.DockerPortBinding;
 import nju.ics.platformserver.net.Protocol;
 import nju.ics.platformserver.proxy.ProxyServerManager;
-import nju.ics.platformserver.server.config.ApplicationManagerProperties;
+import nju.ics.platformserver.server.config.PlatformClientProperties;
 
 import java.io.IOException;
 import java.net.URI;
@@ -34,15 +34,15 @@ public class ApplicationManager {
 
     private final RandomUnusedPortsManager randomUnusedPortsManager;
 
-    private final ApplicationManagerProperties applicationManagerProperties;
+    private final PlatformClientProperties platformClientProperties;
 
     public ApplicationManager(@Nonnull ProxyServerManager proxyServerManager,
                               @Nonnull DockerManager dockerManager,
-                              @Nonnull ApplicationManagerProperties applicationManagerProperties) {
+                              @Nonnull PlatformClientProperties platformClientProperties) {
         this.proxyServerManager = proxyServerManager;
         this.dockerManager = dockerManager;
-        this.randomUnusedPortsManager = new RandomUnusedPortsManager(12000, 13000);
-        this.applicationManagerProperties = applicationManagerProperties;
+        this.randomUnusedPortsManager = new RandomUnusedPortsManager(platformClientProperties.getOriginPort(), platformClientProperties.getBoundPort());
+        this.platformClientProperties = platformClientProperties;
     }
 
     public Application createApplication(@Nonnull CreateApplicationCmd cmd) {
@@ -92,7 +92,7 @@ public class ApplicationManager {
                     HttpRequest request = HttpRequest.newBuilder()
                             .GET()
                             .uri(new URI(String.format("http://%s:%s/platform/client/status/ready",
-                                    applicationManagerProperties.dockerUri().getHost(),
+                                    platformClientProperties.getDockerUri().getHost(),
                                     healthCheckPortBinding.publicPort())))
                             .build();
 

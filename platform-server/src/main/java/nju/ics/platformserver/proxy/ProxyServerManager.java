@@ -12,7 +12,7 @@ import java.util.Map;
 
 @Slf4j
 public class ProxyServerManager {
-    private final String host;
+    private final String targetServersHost;
 
     private final Map<Integer, ProxyServer> proxyServerMap;
 
@@ -20,8 +20,8 @@ public class ProxyServerManager {
 
     private final ProxyServerFactory udpProxyServerFactory;
 
-    public ProxyServerManager(@Nonnull String host, @Nonnull ProxyStrategy proxyStrategy) {
-        this.host = host;
+    public ProxyServerManager(@Nonnull String targetServersHost, @Nonnull ProxyStrategy proxyStrategy) {
+        this.targetServersHost = targetServersHost;
         this.tcpProxyServerFactory = new TcpProxyServerFactory(proxyStrategy);
         this.udpProxyServerFactory = new UdpProxyServerFactory(proxyStrategy);
         this.proxyServerMap = new HashMap<>();
@@ -38,14 +38,14 @@ public class ProxyServerManager {
             log.info("启动 {} ProxyServer [port = {}]", protocol, proxyPort);
             return server;
         });
-        proxyServer.addTargetServer(new TargetServer(host, actualPort));
+        proxyServer.addTargetServer(new TargetServer(targetServersHost, actualPort));
         log.info("为 ProxyServer [port = {}] 增加 TargetServer [port = {}]", proxyPort, actualPort);
     }
 
     public synchronized void unregister(int proxyPort, int actualPort) {
         ProxyServer proxyServer = proxyServerMap.get(proxyPort);
         proxyServer.stop();
-        proxyServer.removeTargetServer(new TargetServer(host, actualPort));
+        proxyServer.removeTargetServer(new TargetServer(targetServersHost, actualPort));
         log.info("为 ProxyServer [port = {}] 移除 TargetServer [port = {}]", proxyPort, actualPort);
     }
 }

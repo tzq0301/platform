@@ -15,22 +15,17 @@ public class ApplicationManagerConfig {
     @Bean
     public ApplicationManager applicationManager(@Nonnull ProxyServerManager proxyServerManager,
                                                  @Nonnull DockerManager dockerManager,
-                                                 @Nonnull ApplicationManagerProperties applicationManagerProperties) {
-        return new ApplicationManager(proxyServerManager, dockerManager, applicationManagerProperties);
+                                                 @Nonnull PlatformClientProperties platformClientProperties) {
+        return new ApplicationManager(proxyServerManager, dockerManager, platformClientProperties);
     }
 
     @Bean
-    public ProxyServerManager proxyServerManage() {
-        return new ProxyServerManager("127.0.0.1", new GetLatestProxyStrategy());
+    public ProxyServerManager proxyServerManage(@Nonnull PlatformClientProperties properties) {
+        return new ProxyServerManager(properties.getTargetServersHost(), new GetLatestProxyStrategy());
     }
 
     @Bean
-    public ApplicationManagerProperties applicationManagerProperties() throws URISyntaxException {
-        return new ApplicationManagerProperties();
-    }
-
-    @Bean
-    public DockerManager dockerManager(ApplicationManagerProperties applicationManagerProperties) {
-        return new DockerManager(applicationManagerProperties.dockerUri());
+    public DockerManager dockerManager(PlatformClientProperties platformClientProperties) {
+        return new DockerManager(platformClientProperties.getDockerUri());
     }
 }

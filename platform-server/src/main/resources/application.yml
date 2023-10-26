@@ -2,3 +2,9 @@ server:
   port: 8080
   servlet:
     context-path: /platform
+
+platform:
+  docker-uri: "tcp://localhost:2375"
+  target-servers-host: "localhost"
+  origin-port: 12000
+  bound-port: 13000
