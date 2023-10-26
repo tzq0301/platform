@@ -6,6 +6,7 @@ import nju.ics.platformmodel.pubsub.ListUnreadMessagesRequest;
 import nju.ics.platformmodel.pubsub.ListUnreadMessagesResponse;
 import nju.ics.platformmodel.pubsub.MessageDTO;
 import nju.ics.platformmodel.pubsub.PublishRequest;
+import nju.ics.platformserver.pubsub.Message;
 import nju.ics.platformserver.pubsub.Topic;
 import nju.ics.platformserver.server.service.PubSubService;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -27,7 +28,7 @@ public class PubSubController {
     @PostMapping("/publish")
     public void publish(@Nonnull @RequestBody @Valid PublishRequest request) {
         MessageDTO message = request.message();
-        this.pubsubService.publish(new nju.ics.platformserver.pubsub.Message<>(message.id(), message.publisherId(), new Topic(message.topic()), message.data(), message.createTime()));
+        this.pubsubService.publish(new Message<>(message.id(), message.publisherId(), new Topic(message.topic()), message.data(), message.createTime()));
     }
 
     @PostMapping("/listUnreadMessages")
