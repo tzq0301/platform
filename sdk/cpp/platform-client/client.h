@@ -32,7 +32,7 @@ class PlatformClient {
                  std::string client_type_,
                  std::string client_name_,
                  std::vector<std::string> pub_topics_,
-                 std::vector<std::string> sub_topics_) noexcept
+                 std::vector<std::string> sub_topics_)
       : http_client(httplib::Client(server_url_)),
         uuid_generator(boost::uuids::random_generator()),
         client_type(std::move(client_type_)),
