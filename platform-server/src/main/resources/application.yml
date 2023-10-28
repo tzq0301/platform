@@ -8,3 +8,4 @@ platform:
   target-servers-host: "localhost"
   origin-port: 12000
   bound-port: 13000
+  application: enable

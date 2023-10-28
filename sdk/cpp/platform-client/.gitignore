@@ -76,6 +76,7 @@ target/
 out/
 build/
 cmake-build-debug/
+.cache
 
 go.work
 *.test

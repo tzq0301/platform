@@ -4,6 +4,7 @@ import jakarta.annotation.Nonnull;
 import jakarta.validation.Valid;
 import nju.ics.platformmodel.application.*;
 import nju.ics.platformserver.application.Application;
+import nju.ics.platformserver.application.ApplicationManager;
 import nju.ics.platformserver.application.model.CreateApplicationCmd;
 import nju.ics.platformserver.application.model.DestroyApplicationCmd;
 import nju.ics.platformserver.application.model.UpdateApplicationCmd;
@@ -11,6 +12,7 @@ import nju.ics.platformserver.application.update.DefaultUpdateStrategy;
 import nju.ics.platformserver.application.update.RollingUpdateStrategy;
 import nju.ics.platformserver.application.update.UpdateStrategy;
 import nju.ics.platformserver.server.service.ApplicationService;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,6 +21,7 @@ import java.util.Set;
 
 @RestController
 @RequestMapping("/application")
+@ConditionalOnBean(ApplicationManager.class)
 public class ApplicationController {
     private final ApplicationService applicationService;
 

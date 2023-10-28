@@ -6,11 +6,13 @@ import nju.ics.platformserver.application.ApplicationManager;
 import nju.ics.platformserver.application.model.CreateApplicationCmd;
 import nju.ics.platformserver.application.model.DestroyApplicationCmd;
 import nju.ics.platformserver.application.model.UpdateApplicationCmd;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
+@ConditionalOnBean(ApplicationManager.class)
 public class ApplicationService {
     private final ApplicationManager applicationManager;
 

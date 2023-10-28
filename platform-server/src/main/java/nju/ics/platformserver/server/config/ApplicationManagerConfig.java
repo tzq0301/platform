@@ -6,11 +6,11 @@ import nju.ics.platformserver.docker.DockerManager;
 import nju.ics.platformserver.proxy.ProxyServerManager;
 import nju.ics.platformserver.proxy.strategy.GetLatestProxyStrategy;
 import org.springframework.boot.SpringBootConfiguration;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 
-import java.net.URISyntaxException;
-
 @SpringBootConfiguration
+@ConditionalOnProperty(name = "platform.application", havingValue = "enable")
 public class ApplicationManagerConfig {
     @Bean
     public ApplicationManager applicationManager(@Nonnull ProxyServerManager proxyServerManager,
