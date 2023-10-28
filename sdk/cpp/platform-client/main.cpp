@@ -30,32 +30,63 @@ int main() {
   //     - print it
   //
 
+//  std::atomic_bool isShutdown{false};
+//
+//  fmt::print("start pub\n");
+//  start_client_deamon("pub", "pub", {"pub2app"}, {}, isShutdown, [](PlatformClient &client, std::string name) {
+//    int num = 10;
+//    fmt::print("[{}] publish {}\n", name, num);
+//    client.publish("pub2app", nlohmann::json(num));
+//
+//    std::this_thread::sleep_for(500ms);
+//  });
+//
+//  fmt::print("start app\n");
+//  start_client_deamon("app", "app", {"app2sub"}, {"pub2app"}, isShutdown, [](PlatformClient &client, std::string name) {
+//    for (auto && message : client.listUnreadMessages()) {
+//      int num = message.data.template get<int>();
+//      fmt::print("[{}] receive {}\n", name, num);
+//      num += 5;
+//      fmt::print("[{}] publish {}\n", name, num);
+//      client.publish("app2sub", nlohmann::json(num));
+//    }
+//
+//    std::this_thread::sleep_for(500ms);
+//  });
+//
+//  fmt::print("start sub\n");
+//  start_client_deamon("sub", "sub", {}, {"app2sub"}, isShutdown, [](PlatformClient &client, std::string name) {
+//    for (auto && message : client.listUnreadMessages()) {
+//      int num = message.data.template get<int>();
+//      fmt::print("[{}] receive {}\n", name, num);
+//    }
+//
+//    std::this_thread::sleep_for(500ms);
+//  });
+//
+//  std::this_thread::sleep_for(5000ms);
+//
+//  isShutdown = true; // program shutdown simulation
+//
+//  fmt::print("shutdown\n");
+//
+//  std::this_thread::sleep_for(1000ms); // wait for some threads' cleaning jobs
+
   std::atomic_bool isShutdown{false};
 
+  // ----------------------------------------------------------------------------------
+
   fmt::print("start pub\n");
-  start_client_deamon("pub", "pub", {"pub2app"}, {}, isShutdown, [](PlatformClient &client, std::string name) {
+  start_client_deamon("pub", "pub", {"topic"}, {}, isShutdown, [](PlatformClient &client, const std::string &name) {
     int num = 10;
     fmt::print("[{}] publish {}\n", name, num);
-    client.publish("pub2app", nlohmann::json(num));
-
-    std::this_thread::sleep_for(500ms);
-  });
-
-  fmt::print("start app\n");
-  start_client_deamon("app", "app", {"app2sub"}, {"pub2app"}, isShutdown, [](PlatformClient &client, std::string name) {
-    for (auto && message : client.listUnreadMessages()) {
-      int num = message.data.template get<int>();
-      fmt::print("[{}] receive {}\n", name, num);
-      num += 5;
-      fmt::print("[{}] publish {}\n", name, num);
-      client.publish("app2sub", nlohmann::json(num));
-    }
+    client.publish("topic", nlohmann::json(num));
 
     std::this_thread::sleep_for(500ms);
   });
 
   fmt::print("start sub\n");
-  start_client_deamon("sub", "sub", {}, {"app2sub"}, isShutdown, [](PlatformClient &client, std::string name) {
+  start_client_deamon("sub", "sub", {}, {"topic"}, isShutdown, [](PlatformClient &client, const std::string &name) {
     for (auto && message : client.listUnreadMessages()) {
       int num = message.data.template get<int>();
       fmt::print("[{}] receive {}\n", name, num);
@@ -63,6 +94,8 @@ int main() {
 
     std::this_thread::sleep_for(500ms);
   });
+
+  // ----------------------------------------------------------------------------------
 
   std::this_thread::sleep_for(5000ms);
 

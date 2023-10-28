@@ -15,3 +15,9 @@ find_package(Boost REQUIRED)
 
 add_executable(platform_client main.cpp)
 target_link_libraries(platform_client PRIVATE nlohmann_json::nlohmann_json fmt Boost::boost)
+
+add_executable(pub pub.cpp)
+target_link_libraries(pub PRIVATE nlohmann_json::nlohmann_json fmt Boost::boost)
+
+add_executable(sub sub.cpp)
+target_link_libraries(sub PRIVATE nlohmann_json::nlohmann_json fmt Boost::boost)
