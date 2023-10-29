@@ -1,5 +1,10 @@
 image_name="tzq0301/platform-server"
-image_tag="latest"
+
+if [ -z "$1" ]; then
+  image_tag="latest"
+else
+  image_tag=$1
+fi
 
 set -e
 
